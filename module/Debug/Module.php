@@ -72,15 +72,13 @@ class Module implements AutoloaderProviderInterface
         // And here we attach a listener to the finish event that has to be executed with priority 2
         // The priory here is 2 because listeners with that priority will be executed just before the
         // actual finish event is triggered.
-        $eventManager->attach(MvcEvent::EVENT_FINISH, array(
-            $this,
-            'getMvcDuration'
-        ), 2);
+        $eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'getMvcDuration'), 2);
         
-        $eventManager->attach(MvcEvent::EVENT_RENDER, array(
-            $this,
-            'addDebugOverlay'
-        ), 100);
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this,'addDebugOverlay'), 100);
+        
+        $eventManager->attach(MvcEvent::EVENT_RENDER, array($this,'injectViewVariables'),100);
+        
+        $eventManager->attach(MvcEvent::EVENT_FINISH, array($this,'dbProfilerStats'),2);
     }
 
     public function getMvcDuration(MvcEvent $event)
@@ -112,4 +110,38 @@ class Module implements AutoloaderProviderInterface
         $sidebarView->addChild($viewModel, 'content');
         $event->setViewModel($sidebarView);
     }
+    
+    /**
+     * Injects common variables in the view model
+     * @param MvcEvent $event
+     */
+    public function injectViewVariables(MvcEvent $event)
+    {
+        $viewModel = $event->getViewModel();
+        $services = $event->getApplication()->getServiceManager();
+        $variables = array();
+        if($services->has('database-profiler')) {
+        	// If we have database profiler service then we inject it in the view
+        	$profiler = $services->get('database-profiler');
+        	$variables['profiler'] = $profiler;
+        }
+        if(!empty($variables)) {
+        	$viewModel->setVariables($variables);
+        }        
+    }
+    
+    public function dbProfilerStats(MvcEvent $event)
+    {
+        $services = $event->getApplication()->getServiceManager();
+        if($services->has('database-profiler')) {
+        	$profiler = $services->get('database-profiler');
+        	foreach ($profiler->getProfiles() as $profile) {
+        		$message = '"' . $profile['sql'].' ('.implode(',',$profile['parameters']->getNamedArray()).')"
+took '.$profile['elapse'].' seconds'."\n";
+        		error_log($message);
+        	}
+        }
+    }
+    
+// EOC
 }
