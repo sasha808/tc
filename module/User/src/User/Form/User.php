@@ -64,7 +64,7 @@ class User extends Form
                 'type' => 'Zend\Form\Element\Text',
                 'attributes' => array(
                         'placeholder' => 'Type name...',
-                        'required' => 'required',
+                        //'required' => 'false',
                 ),
                 'options' => array(
                         'label' => 'Name',
@@ -79,7 +79,7 @@ class User extends Form
                 'attributes' => array(
                         // Below: HTML5 way to specify that the input will be phone number
                         'type' => 'tel',
-                        'required' => 'required',
+                        //'required' => 'false',
                         // Below: HTML5 way to specify the allowed characters
                         'pattern'  => '^[\d-/]+$'
                 ),
@@ -92,7 +92,7 @@ class User extends Form
                     'label' => 'Your photo'
                 ),
                 'attributes' => array(
-                    'required' => 'required',
+                    //'required' => 'false',
                     'id'  => 'photo'
                 ),
         ));

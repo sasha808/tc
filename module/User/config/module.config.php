@@ -2,7 +2,8 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'User\Controller\Account' => 'User\Controller\AccountController'
+            'User\Controller\Account' => 'User\Controller\AccountController',
+            'User\Controller\Log'     => 'User\Controller\LogController',
         )
     ),
     'service_manager' => array(

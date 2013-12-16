@@ -29,6 +29,11 @@ class AccountController extends AbstractActionController
                 // save the data of the new user
                 $model = new UserModel();
                 $id = $model->insert($form->getData());
+                return $this->redirect()->toRoute('user/default', array (
+                		'controller' => 'account',
+                		'action' => 'view',
+                		'id' => $id
+                ));
             }
         }
         // pass the data to the view for visualization
@@ -41,7 +46,8 @@ class AccountController extends AbstractActionController
      */
     public function registerAction()
     {
-        return array();
+        $result = $this->forward()->dispatch('User\Controller\Account', array('action' => 'add',));
+        return $result;
     }
 
     public function viewAction()
@@ -58,4 +64,18 @@ class AccountController extends AbstractActionController
     {
         return array();
     }
+    
+    public function meAction()
+    {   
+        
+    	return array(
+    		
+    	);
+    }
+    
+    public function deniedAction()
+    {
+    	return array();
+    }
+    
 }
