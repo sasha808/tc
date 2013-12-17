@@ -56,7 +56,8 @@ return array(
     ),
     'service_manager' => array(
         'factories' => array(
-            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory'
+            'translator' => 'Zend\I18n\Translator\TranslatorServiceFactory',
+            'cipher'     => 'Application\Service\Factory\SymmetricCipher',
         )
     ),
     'translator' => array(

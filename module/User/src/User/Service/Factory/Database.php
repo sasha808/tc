@@ -7,7 +7,6 @@ use Zend\ServiceManager\ServiceLocatorInterface;
 
 class Database implements FactoryInterface
 {
-
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
         $config = $serviceLocator->get('config');

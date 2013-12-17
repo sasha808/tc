@@ -24,35 +24,35 @@ class LogController extends AbstractActionController
         $username = $this->params()->fromPost('username');
         $password = $this->params()->fromPost('password');
 
-       // $auth = $this->serviceLocator->get('auth');
-       // $authAdapter = $auth->getAdapter();
+        $auth = $this->serviceLocator->get('auth');
+        $authAdapter = $auth->getAdapter();
         // below we pass the username and the password to the authentication adapter for verification
-       // $authAdapter->setIdentity($username);
-       // $authAdapter->setCredential($password);
+        $authAdapter->setIdentity($username);
+        $authAdapter->setCredential($password);
 
         // here we do the actual verification
-        //$result = $auth->authenticate();
-        $isValid = 1;
-        //$isValid = $result->isValid();
+        $result = $auth->authenticate();
+        
+        $isValid = $result->isValid();
         if($isValid) {
             // upon successful validation the getIdentity method returns
             // the user entity for the provided credentials
-            //$user = $result->getIdentity();
+            $user = $result->getIdentity();
 
             // @todo: upon successful validation store additional information about him in the auth storage
 
-            //$this->flashmessenger()->addSuccessMessage(sprintf('Welcome %s. You are now logged in.',$user->getName()));
-            $this->flashmessenger()->addSuccessMessage('You are now logged in.');
+            $this->flashmessenger()->addSuccessMessage(sprintf('Welcome %s. You are now logged in.',$user->getName()));
+            //$this->flashmessenger()->addSuccessMessage(sprintf('Welcome %s. You are now logged in.'));
 
             return $this->redirect()->toRoute('user/default', array (
                     'controller' => 'account',
-                    'action'     => 'me',
+                    'action'     => 'me'
             ));
         } else {
-           /*  $event = new EventManager('user');
+            $event = new EventManager('user');
             $event->trigger('log-fail', $this, array('username'=> $username));
 
-            return array('errors' => $result->getMessages()); */
+            return array('errors' => $result->getMessages());
         }
     }
 }
